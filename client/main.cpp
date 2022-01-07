@@ -12,7 +12,6 @@ int main() {
 	float* rawFloatData = new float[DATANUM];
 	for (size_t i = 0; i < DATANUM; i++)
 		rawFloatData[i] = float(i + 1);
-
 	//求最大值，无加速
 	QueryPerformanceCounter(&start);
 	float max0 = myMath::m_max(rawFloatData, DATANUM);
@@ -31,10 +30,10 @@ int main() {
 
 	//求和，无加速
 	QueryPerformanceCounter(&start);
-	float sum0 = myMath::sum(rawFloatData, DATANUM);
+	float testsum = myMath::sum(rawFloatData, DATANUM);
 	QueryPerformanceCounter(&end);
 	cout << "求和，无加速" << endl;
-	cout << "和为：" << sum0 << endl;
+	cout << "和为：" << testsum << endl;
 	cout << "Time Consumed:" << (end.QuadPart - start.QuadPart) << endl;
 
 	//求最大值，加速
@@ -49,7 +48,7 @@ int main() {
 	float* result0 = new float[DATANUM];
 	QueryPerformanceCounter(&start);
 	myMath::sort(rawFloatData, DATANUM, result0);
-	QueryPerformanceCounter(&end);
+	//QueryPerformanceCounter(&end);
 	cout << "排序正确与否，无加速" <<myMath::isSorted(result0,DATANUM)<< endl;
 	cout << "Time Consumed:" << (end.QuadPart - start.QuadPart) << endl;
 	delete[] result0;
@@ -57,7 +56,7 @@ int main() {
 	//排序，有加速
 	float* result1 = new float[DATANUM];
 	QueryPerformanceCounter(&start);
-	myMath::sortSpeedUp(rawFloatData, DATANUM, result1);
+	//myMath::sortSpeedUp(rawFloatData, DATANUM, result1);
 	QueryPerformanceCounter(&end);
 	cout << "排序正确与否,有加速" << myMath::isSorted(result1, DATANUM) << endl;
 	cout << "Time Consumed:" << (end.QuadPart - start.QuadPart) << endl;
@@ -65,5 +64,10 @@ int main() {
 	
 	delete[] rawFloatData;
 
+
+	float test[8] = { 2,34,55,123,3,21,78,90 };
+	myMath::sortByMerge(test, 2, 4, 6);
+	for (int i = 0; i < 8; i++)
+		cout << test[i] << endl;
 	return 0;
 }

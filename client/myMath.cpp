@@ -6,11 +6,12 @@
 using namespace std;
 
 float myMath::sum(const float data[], const int len) {
-	float sumNum = 0;
-	for (int i = 0; i < len; i++) {
+	//如果sumNum是float型，会存在2^23的上限？为啥
+	double sumNum = 0;
+	for (size_t i = 0; i < len; i++) {
 		sumNum += log(sqrt(data[i]));
 	}
-return sumNum;
+	return sumNum;
 }
 
 float myMath::m_max(const float data[], const int len) {
@@ -69,7 +70,7 @@ float myMath::sumSpeedUp(const float data[], const int len) {
 float myMath::m_maxSpeedUp(const float data[], const int len) {
 	float maxNum = log(sqrt(data[0]));
 
-	int iter = len / (MAX_THREADS * 8);  //_m256存储8位浮点数
+	int iter = len / (MAX_THREADS * 8);  //_m256可以存储8位浮点数
 	__m256* tempResult = new __m256[MAX_THREADS]; //将数据分为MAX_THREADS块
 #pragma omp parallel for num_threads(MAX_THREADS)
 	for (int i = 0; i < MAX_THREADS; i++) {
@@ -135,7 +136,7 @@ int myMath::isSorted(const float data[], const int len) {
 }
 
 int myMath::sortByMerge(float data[], int low, int mid, int high) {
-	float* temp = new float[high - low+1];
+	float* temp = new float[high - low];
 	int count = 0;
 	int i = low;
 	int j = mid;
