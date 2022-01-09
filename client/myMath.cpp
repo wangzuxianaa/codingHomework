@@ -100,33 +100,30 @@ float myMath::sortSpeedUp(const float data[], const int len, float  result[]) {
 	int iter = len / MAX_THREADS;  //分为MAX_THREADS块，每块有iter个值
 #pragma omp parallel for num_threads(MAX_THREADS)
 	//对每块进行冒泡排序
-	for (int i = 0; i < MAX_THREADS; i++) {
-		for (int j = 0; j < iter; j++) {
-			for (int k = 0; k < iter - i - 1; k++) {
-				if (result[i * iter + k] > result[i * iter + k + 1]) {
-					float temp = result[i * iter + k + 1];
-					result[i * iter + k + 1] = result[i * iter + k];
-					result[i * iter + k] = temp;
+	for (int k = 0; k < MAX_THREADS; k++) {
+		int x = k * iter;
+		for (int i = 0; i < iter; i++) {
+			for (int j = 0; j < iter - 1 - i; j++) {
+				if (result[x + j] > result[x + j + 1]) {
+					float temp = result[x + j];
+					result[x + j] = result[x + j + 1];
+					result[x + j + 1] = temp;
 				}
 			}
 		}
 	}
-	//归并排序
-	for (int round = 0; round < (log(MAX_THREADS / log(2))); round++) {
-		int dataNum = 2*pow(2,round) * iter;   //第n轮归并
-		int threadNum = MAX_THREADS / (pow(2, round + 1));//需要的线程数
-#pragma omp parallel for num_threads(MAX_THREADS)
-		for (int i = 0; i < threadNum; i++) {
-			int low = dataNum * threadNum;
-			int mid = dataNum * (threadNum+0.5);
-			int high = dataNum * (threadNum+1);
-			sortByMerge(result, low, mid, high);
+	for (int k = 0; k < log(MAX_THREADS) / log(2); k++) {
+		int thread_nums = MAX_THREADS / (pow(2, k + 1));
+#pragma omp parallel for num_threads(thread_nums)
+		for (int i = 0; i < thread_nums; i++) {
+			int increment = iter * pow(2, k+1);
+			sortByMerge(result, i * increment, (0.5+i) * increment,(i+1) *increment);
 		}
 	}
 	return 0;
 }
 
-//
+//检验排序是否正确
 int myMath::isSorted(const float data[], const int len) {
 	for (int i = 1; i < len; i++) {
 		if (data[i] < data[i - 1])
@@ -135,6 +132,7 @@ int myMath::isSorted(const float data[], const int len) {
 	return 0;
 }
 
+//归并排序，从小到大
 int myMath::sortByMerge(float data[], int low, int mid, int high) {
 	float* temp = new float[high - low];
 	int count = 0;

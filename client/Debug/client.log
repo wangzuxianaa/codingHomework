@@ -1,9 +1,9 @@
-﻿  myMath.cpp
-D:\VSworkspace\floatCount\client\myMath.cpp(11,23): warning C4018: “<”: 有符号/无符号不匹配
-D:\VSworkspace\floatCount\client\myMath.cpp(14,9): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
-D:\VSworkspace\floatCount\client\myMath.cpp(49,46): warning C4316: “__m256”: 在堆上分配的对象可能不是对齐 32
-D:\VSworkspace\floatCount\client\myMath.cpp(74,46): warning C4316: “__m256”: 在堆上分配的对象可能不是对齐 32
-D:\VSworkspace\floatCount\client\myMath.cpp(116,15): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-D:\VSworkspace\floatCount\client\myMath.cpp(117,17): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-D:\VSworkspace\floatCount\client\myMath.cpp(121,12): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+﻿  main.cpp
+D:\VSworkspace\floatCount\client\main.cpp(16,42): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+D:\VSworkspace\floatCount\client\main.cpp(23,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+D:\VSworkspace\floatCount\client\main.cpp(32,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+D:\VSworkspace\floatCount\client\main.cpp(43,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+D:\VSworkspace\floatCount\client\main.cpp(52,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+D:\VSworkspace\floatCount\client\main.cpp(63,18): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+D:\VSworkspace\floatCount\client\main.cpp(72,18): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
   client.vcxproj -> D:\VSworkspace\floatCount\Debug\client.exe
