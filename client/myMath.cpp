@@ -3,6 +3,7 @@
 #include "omp.h"
 #include <immintrin.h>
 #define MAX_THREADS 64
+#define CHUNK_POWER 9
 using namespace std;
 
 float myMath::sum(const float data[], const int len) {
@@ -97,10 +98,11 @@ float myMath::sortSpeedUp(const float data[], const int len, float  result[]) {
 	for (int i = 0; i < len; i++) {
 		result[i] = data[i];
 	}
-	int iter = len / MAX_THREADS;  //分为MAX_THREADS块，每块有iter个值
-#pragma omp parallel for num_threads(MAX_THREADS)
+	int chunk_num = pow(2,CHUNK_POWER);
+	int iter = len / chunk_num;  //分为MAX_THREADS块，每块有iter个值
+#pragma omp parallel for num_threads(chunk_num)
 	//对每块进行冒泡排序
-	for (int k = 0; k < MAX_THREADS; k++) {
+	for (int k = 0; k < chunk_num; k++) {
 		int x = k * iter;
 		for (int i = 0; i < iter; i++) {
 			for (int j = 0; j < iter - 1 - i; j++) {
@@ -112,8 +114,8 @@ float myMath::sortSpeedUp(const float data[], const int len, float  result[]) {
 			}
 		}
 	}
-	for (int k = 0; k < log(MAX_THREADS) / log(2); k++) {
-		int thread_nums = MAX_THREADS / (pow(2, k + 1));
+	for (int k = 0; k < log(chunk_num) / log(2); k++) {
+		int thread_nums = chunk_num / (pow(2, k + 1));
 #pragma omp parallel for num_threads(thread_nums)
 		for (int i = 0; i < thread_nums; i++) {
 			int increment = iter * pow(2, k+1);

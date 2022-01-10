@@ -4,7 +4,8 @@
 #include"omp.h"
 #include <cstdlib>
 #define MAX_THREADS 64
-#define SUBDATANUM 1000
+#define SUBDATANUM 20000
+
 #define DATANUM (SUBDATANUM * MAX_THREADS)
 using namespace std;
 int main() {
@@ -57,7 +58,7 @@ int main() {
 	//排序，无加速
 	float* result0 = new float[DATANUM];
 	QueryPerformanceCounter(&start);
-	myMath::sort(rawFloatData, DATANUM, result0);
+	//myMath::sort(rawFloatData, DATANUM, result0);
 	QueryPerformanceCounter(&end);
 	cout << "排序正确与否，无加速" <<myMath::isSorted(result0,DATANUM)<< endl;
 	float timeSort1 = end.QuadPart - start.QuadPart;
