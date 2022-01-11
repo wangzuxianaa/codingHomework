@@ -1,0 +1,9 @@
+﻿  main.cpp
+F:\Desktop\work\class\coding homework\floatCount\server\main.cpp(56,42): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\server\main.cpp(63,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\server\main.cpp(78,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\server\main.cpp(90,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\server\main.cpp(100,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\server\main.cpp(122,18): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\server\main.cpp(132,18): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+  server.vcxproj -> F:\Desktop\work\class\coding homework\floatCount\x64\Debug\server.exe

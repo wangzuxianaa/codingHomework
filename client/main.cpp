@@ -1,14 +1,46 @@
-#include<iostream>
-#include<Windows.h>
-#include"myMath.h"
-#include"omp.h"
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
+#pragma comment(lib,"ws2_32.lib")
+#include <WinSock2.h>
+#include <iostream>
+#include <Windows.h>
+#include "myMath.h"
+#include "omp.h"
 #include <cstdlib>
+#include <stdlib.h>
+#include <time.h>
+
 #define MAX_THREADS 64
 #define SUBDATANUM 20000
 
 #define DATANUM (SUBDATANUM * MAX_THREADS)
 using namespace std;
 int main() {
+	//初始化套接字库
+	WSAData wsaData;
+	WORD DllVersion = MAKEWORD(2, 1);//版本号
+	if (WSAStartup(DllVersion, &wsaData) != 0)
+	{
+		MessageBoxA(NULL, "WinSock startup error", "Error", MB_OK | MB_ICONERROR);
+		return 0;
+	}
+
+	SOCKADDR_IN addr; //Adres przypisany do socketu Connection
+	int sizeofaddr = sizeof(addr);
+	addr.sin_addr.s_addr = inet_addr("127.0.0.1"); //Addres = localhost
+	addr.sin_port = htons(8081); //Port = 1111
+	addr.sin_family = AF_INET; //IPv4 Socket
+
+	SOCKET Connection = socket(AF_INET, SOCK_STREAM, NULL);
+	if (connect(Connection, (SOCKADDR*)&addr, sizeofaddr) != 0) //Connection
+	{
+		MessageBoxA(NULL, "Blad Connection", "Error", MB_OK | MB_ICONERROR);
+		return 0;
+	}
+	cout << "已经连接到服务器端" << endl;
+	srand(time(NULL));
+	cout << "-------------------------------" << endl;
+
 	LARGE_INTEGER start;
 	LARGE_INTEGER end;
 	float* rawFloatData = new float[DATANUM];
@@ -23,6 +55,7 @@ int main() {
 	cout << "最大值为：" << max0 << endl;
 	float timeMax0 = end.QuadPart - start.QuadPart;
 	cout << "Time Consumed:" << timeMax0 << endl;
+	cout << "-------------------------------" << endl;
 
 	//求最大值，加速
 	QueryPerformanceCounter(&start);
@@ -34,6 +67,7 @@ int main() {
 	cout << "Time Consumed:" << timeMax1 << endl;
 	
 	cout << "求最大值加速比：" << timeMax0 / timeMax1 << endl;
+	cout << "-------------------------------" << endl;
 
 	//求和，无加速
 	QueryPerformanceCounter(&start);
@@ -43,8 +77,9 @@ int main() {
 	cout << "和为：" << sum0 << endl;
 	float timeSum0 = end.QuadPart - start.QuadPart;
 	cout << "Time Consumed:" << timeSum0 << endl;
+	cout << "-------------------------------" << endl;
 
-	//求最大值，加速
+	//求和，加速
 	QueryPerformanceCounter(&start);
 	float sum1 = myMath::sumSpeedUp(rawFloatData, DATANUM);
 	QueryPerformanceCounter(&end);
@@ -54,6 +89,13 @@ int main() {
 	cout << "Time Consumed:" << timeSum1 << endl;
 
 	cout << "求和加速比：" << timeSum0 / timeSum1 << endl;
+	cout << "-------------------------------" << endl;
+
+	//客户端发送数据
+	send(Connection, (char*)&max0, sizeof(max0), 0);
+	cout << "客户端最大值发送完毕" << endl;
+	send(Connection, (char*)&sum0, sizeof(sum0), 0);
+	cout << "客户端的和发送完毕" << endl;
 
 	//排序，无加速
 	float* result0 = new float[DATANUM];
@@ -63,6 +105,7 @@ int main() {
 	cout << "排序正确与否，无加速" <<myMath::isSorted(result0,DATANUM)<< endl;
 	float timeSort1 = end.QuadPart - start.QuadPart;
 	cout << "Time Consumed:" << timeSort1 << endl;
+	cout << "-------------------------------" << endl;
 
 	//排序，有加速
 	float* result1 = new float[DATANUM];
@@ -74,6 +117,7 @@ int main() {
 	cout << "Time Consumed:" << timeSort2 << endl;
 
 	cout << "排序加速比：" << timeSort1 / timeSort2 << endl;
+	cout << "-------------------------------" << endl;
 	/*
 	for (int i = 0; i < MAX_THREADS; i++) {
 		for (int j = 0; j < SUBDATANUM; j++)
