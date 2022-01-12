@@ -1,5 +1,6 @@
 #include "myMath.h"
 #include<iostream>
+#include<vector>
 #include "omp.h"
 #include <immintrin.h>
 #define MAX_THREADS 64
@@ -126,12 +127,37 @@ float myMath::sortSpeedUp(const float data[], const int len, float  result[]) {
 }
 
 //检验排序是否正确
+int myMath::isVectorSorted(const vector<float>& vfloat) {
+	for (int i = 1; i < vfloat.size(); i++) {
+		if (vfloat[i] < vfloat[i - 1])
+			return -1;
+	}
+	return 0;
+}
+
 int myMath::isSorted(const float data[], const int len) {
 	for (int i = 1; i < len; i++) {
 		if (data[i] < data[i - 1])
 			return -1;
 	}
 	return 0;
+}
+
+vector<float> myMath::mergeSortedArray(float data1[], float data2[]) {
+	vector<float> res;
+	int i = 0, j = 0;
+	while (i < sizeof(data1) / sizeof(data1[0]) && j < sizeof(data2) / sizeof(data2[0])) {
+		if (data1[i] < data2[j])
+			res.push_back(data1[i++]);
+		else
+			res.push_back(data2[j++]);
+	}
+	while (i < sizeof(data1) / sizeof(data1[0]))
+		res.push_back(data1[i++]);
+	while (j < sizeof(data2) / sizeof(data2[0]))
+		res.push_back(data2[j++]);
+
+	return res;
 }
 
 //归并排序，从小到大
