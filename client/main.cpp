@@ -11,7 +11,7 @@
 #include <time.h>
 
 #define MAX_THREADS 64
-#define SUBDATANUM 20000
+#define SUBDATANUM 10000
 
 #define DATANUM (SUBDATANUM * MAX_THREADS)
 using namespace std;
@@ -43,18 +43,20 @@ int main() {
 
 	LARGE_INTEGER start;
 	LARGE_INTEGER end;
+	LARGE_INTEGER freq;
 	float* rawFloatData = new float[DATANUM];
 	for (size_t i = 0; i < DATANUM; i++)
 		//rawFloatData[i] = float(i + 1);
 		rawFloatData[i] = (rand() % (100 - 1)) + 1;
 	//求最大值，无加速
+	QueryPerformanceFrequency(&freq);
 	QueryPerformanceCounter(&start);
 	float max0 = myMath::m_max(rawFloatData, DATANUM);
 	QueryPerformanceCounter(&end);
 	cout << "求最大值，无加速" << endl;
 	cout << "最大值为：" << max0 << endl;
 	float timeMax0 = end.QuadPart - start.QuadPart;
-	cout << "Time Consumed:" << timeMax0 << endl;
+	cout << "Time Consumed: " << timeMax0*1000/freq.QuadPart << "ms" << endl;
 	cout << "-------------------------------" << endl;
 
 	//求最大值，加速
@@ -64,7 +66,7 @@ int main() {
 	cout << "求最大值，加速" << endl;
 	cout << "最大值为：" << max1 << endl;
 	float timeMax1 = end.QuadPart - start.QuadPart;
-	cout << "Time Consumed:" << timeMax1 << endl;
+	cout << "Time Consumed: " << timeMax1*1000/freq.QuadPart << "ms" << endl;
 	
 	cout << "求最大值加速比：" << timeMax0 / timeMax1 << endl;
 	cout << "-------------------------------" << endl;
@@ -76,7 +78,7 @@ int main() {
 	cout << "求和，无加速" << endl;
 	cout << "和为：" << sum0 << endl;
 	float timeSum0 = end.QuadPart - start.QuadPart;
-	cout << "Time Consumed:" << timeSum0 << endl;
+	cout << "Time Consumed: " << timeSum0 * 1000 / freq.QuadPart << "ms" << endl;
 	cout << "-------------------------------" << endl;
 
 	//求和，加速
@@ -86,25 +88,46 @@ int main() {
 	cout << "求和，加速" << endl;
 	cout << "和为：" << sum1 << endl;
 	float timeSum1 = end.QuadPart - start.QuadPart;
-	cout << "Time Consumed:" << timeSum1 << endl;
+	cout << "Time Consumed: " << timeSum1 * 1000 / freq.QuadPart << "ms" << endl;
 
 	cout << "求和加速比：" << timeSum0 / timeSum1 << endl;
 	cout << "-------------------------------" << endl;
 
-	//客户端发送数据
-	send(Connection, (char*)&max0, sizeof(max0), 0);
-	cout << "客户端最大值发送完毕" << endl;
-	send(Connection, (char*)&sum0, sizeof(sum0), 0);
-	cout << "客户端的和发送完毕" << endl;
+	//客户端发送最大值数据
+	int maxSendRes = send(Connection, (char*)&max0, sizeof(max0), 0);
+	while (TRUE) {
+		if (maxSendRes > 0) {
+			cout << "客户端最大值发送完毕" << endl;
+			break;
+		}
+		else
+			cout << "客户端最大值发送失败" << endl;
+	}
+	cout << "-------------------------------" << endl;
+
+	//客户端发送和的数据
+	int sumSendRes = send(Connection, (char*)&sum0, sizeof(sum0), 0);
+	while (TRUE) {
+		if (sumSendRes > 0) {
+			cout << "客户端和发送完毕" << endl;
+			break;
+		}
+		else
+			cout << "客户端和发送失败" << endl;
+	}
+	cout << "-------------------------------" << endl;
 
 	//排序，无加速
 	float* result0 = new float[DATANUM];
 	QueryPerformanceCounter(&start);
-	//myMath::sort(rawFloatData, DATANUM, result0);
+	myMath::sort(rawFloatData, DATANUM, result0);
 	QueryPerformanceCounter(&end);
-	cout << "排序正确与否，无加速" <<myMath::isSorted(result0,DATANUM)<< endl;
+	if (myMath::isSorted(result0, DATANUM) == 0)
+		cout << "排序正确(无加速)" << endl;
+	else
+		cout << "排序错误(无加速)" << endl;
 	float timeSort1 = end.QuadPart - start.QuadPart;
-	cout << "Time Consumed:" << timeSort1 << endl;
+	cout << "Time Consumed:" << timeSort1*1000/freq.QuadPart << "ms" << endl;
 	cout << "-------------------------------" << endl;
 
 	//排序，有加速
@@ -112,12 +135,26 @@ int main() {
 	QueryPerformanceCounter(&start);
 	myMath::sortSpeedUp(rawFloatData, DATANUM, result1);
 	QueryPerformanceCounter(&end);
-	cout << "排序正确与否,有加速" << myMath::isSorted(result1, DATANUM)<< endl;
+	if (myMath::isSorted(result1, DATANUM) == 0)
+		cout << "排序正确(有加速)" << endl;
+	else
+		cout << "排序错误(有加速)" << endl;
 	float timeSort2 = end.QuadPart - start.QuadPart;
-	cout << "Time Consumed:" << timeSort2 << endl;
+	cout << "Time Consumed: " << timeSort2 * 1000 / freq.QuadPart << "ms" << endl;
 
 	cout << "排序加速比：" << timeSort1 / timeSort2 << endl;
 	cout << "-------------------------------" << endl;
+
+	//将加速完的数组传给服务端
+	int sortSendRes = send(Connection, (char*)result1, sizeof(result1), 0);
+	while (TRUE) {
+		if (sortSendRes > 0) {
+			cout << "客户端排序发送完毕" << endl;
+			break;
+		}
+		else
+			cout << "客户端排序发送失败" << endl;
+	}
 	/*
 	for (int i = 0; i < MAX_THREADS; i++) {
 		for (int j = 0; j < SUBDATANUM; j++)
@@ -131,10 +168,12 @@ int main() {
 		}
 		cout << "\n" << endl;
 	}*/
-	delete[] result0;
+	//delete[] result0;
 	delete[] result1;
 	delete[] rawFloatData;
 
+	closesocket(Connection);
+	WSACleanup();
 
 	
 	return 0;
