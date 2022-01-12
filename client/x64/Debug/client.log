@@ -1,19 +1,10 @@
 ﻿  main.cpp
 F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(41,12): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(49,42): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(56,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(66,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(78,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(88,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(106,18): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(116,18): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
-  myMath.cpp
-F:\Desktop\work\class\coding homework\floatCount\client\myMath.cpp(15,9): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\myMath.cpp(50,46): warning C4316: “__m256”: 在堆上分配的对象可能不是对齐 32
-F:\Desktop\work\class\coding homework\floatCount\client\myMath.cpp(75,46): warning C4316: “__m256”: 在堆上分配的对象可能不是对齐 32
-F:\Desktop\work\class\coding homework\floatCount\client\myMath.cpp(101,16): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\myMath.cpp(118,19): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\myMath.cpp(121,18): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-F:\Desktop\work\class\coding homework\floatCount\client\myMath.cpp(122,47): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
-  正在生成代码...
+F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(50,42): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(58,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(68,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(80,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(90,17): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(129,18): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
+F:\Desktop\work\class\coding homework\floatCount\client\main.cpp(142,18): warning C4244: “初始化”: 从“LONGLONG”转换到“float”，可能丢失数据
   client.vcxproj -> F:\Desktop\work\class\coding homework\floatCount\x64\Debug\client.exe
