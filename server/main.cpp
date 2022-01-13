@@ -10,11 +10,12 @@
 #include <cstdlib>
 
 #define MAX_THREADS 64
-#define SUBDATANUM 10000
+#define SUBDATANUM 1000000
 #define DATANUM (SUBDATANUM * MAX_THREADS)
 
 using namespace std;
 int main() {
+
 	//初始化套接字库
 	WSAData wsaData;
 	WORD DllVersion = MAKEWORD(2, 1);//版本号
@@ -28,7 +29,7 @@ int main() {
 	SOCKADDR_IN addr;
 	int addrlen = sizeof(addr);
 	addr.sin_addr.s_addr = inet_addr("127.0.0.1"); //target PC
-	addr.sin_port = htons(8081); // sever Port
+	addr.sin_port = htons(8080); // sever Port
 	addr.sin_family = AF_INET; //IPv4 Socket
 
 	SOCKET sListen = socket(AF_INET, SOCK_STREAM, NULL);
@@ -140,8 +141,12 @@ int main() {
 
 	//排序，无加速
 	float* result0 = new float[DATANUM];
+	for (int i = 0; i < DATANUM; i++) {
+		result0[i] = rawFloatData[i];
+	}
 	QueryPerformanceCounter(&start);
-	myMath::sort(rawFloatData, DATANUM, result0);
+	myMath::cutSortArray(result0, 0, DATANUM - 1);
+	//myMath::sort(rawFloatData, DATANUM, result0);
 	QueryPerformanceCounter(&end);
 	float timeSort1 = end.QuadPart - start.QuadPart;
 	if (myMath::isSorted(result0, DATANUM) == 0)
@@ -153,10 +158,15 @@ int main() {
 
 	//排序，有加速
 	float* result1 = new float[DATANUM];
+	for (int i = 0; i < DATANUM; i++) {
+		result1[i] = rawFloatData[i];
+	}
+	//vector<float> result = myMath::arrayToVector(result1);
 	QueryPerformanceCounter(&start);
-	myMath::sortSpeedUp(rawFloatData, DATANUM, result1);
+	myMath::merge_sort(0, DATANUM, result1, DATANUM);
+	//vector<float> result = myMath::sortSpeedUp2(result1, DATANUM);
 	QueryPerformanceCounter(&end);
-	if (myMath::isSorted(result1, DATANUM) == 0)
+	if (myMath::isSorted(result1,DATANUM) == 0)
 		cout << "排序正确(有加速)" << endl;
 	else
 		cout << "排序错误(有加速)" << endl;
@@ -199,7 +209,7 @@ int main() {
 			cout << "两组数据排序错误" << endl;
 		}
 	}
-	cout << "两组数据归并排序所花费的时间: " << timeMergeSortedArray*1000/freq.QuadPart << "ms" << endl;
+	cout << "两组有序数组归并排序所花费的时间: " << timeMergeSortedArray*1000/freq.QuadPart << "ms" << endl;
 
 
 	/*
@@ -215,7 +225,7 @@ int main() {
 		}
 		cout << "\n" << endl;
 	}*/
-	//delete[] result0;
+	delete[] result0;
 	delete[] result1;
 	delete[] rawFloatData;
 	delete[] result1_recv;
